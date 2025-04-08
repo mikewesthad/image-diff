@@ -1,6 +1,6 @@
 # image-diff
 
-A handy web app to diff two images pixel-by-pixel using WebGL shaders.
+A handy web app to diff two images pixel-by-pixel using WebGL shaders. The existing free tools online were painful to use, so this aims to be easier to use.
 
 ## Development
 
@@ -11,6 +11,8 @@ npm run dev
 
 ## Deploying
 
-TBD
+```
+npm run build
+```
 
-## To Dos
+TBD
