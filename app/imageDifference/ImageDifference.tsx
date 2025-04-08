@@ -28,7 +28,7 @@ export default function ImageDifference({
       canvas.width = Math.max(imageA.width, imageB.width);
       canvas.height = Math.max(imageA.height, imageB.height);
 
-      const gl = canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl2");
       if (!gl) {
         setError("Failed to create WebGL context");
         return;
@@ -52,8 +52,6 @@ export default function ImageDifference({
         program,
         textureA,
         textureB,
-        imageA,
-        imageB,
       });
 
       // TODO: ideally an object URL.

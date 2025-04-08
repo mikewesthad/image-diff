@@ -6,15 +6,11 @@ export function drawTwoImageProgram({
   program,
   textureA,
   textureB,
-  imageA,
-  imageB,
 }: {
   gl: WebGLRenderingContext;
   program: WebGLProgram;
   textureA: WebGLTexture;
   textureB: WebGLTexture;
-  imageA: HTMLImageElement;
-  imageB: HTMLImageElement;
 }) {
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -34,11 +30,6 @@ export function drawTwoImageProgram({
   gl.enableVertexAttribArray(texCoordLocation);
   gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
   gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-  const imageASizeLocation = gl.getUniformLocation(program, "u_imageASize");
-  const imageBSizeLocation = gl.getUniformLocation(program, "u_imageBSize");
-  gl.uniform2f(imageASizeLocation, imageA.width, imageA.height);
-  gl.uniform2f(imageBSizeLocation, imageB.width, imageB.height);
 
   const image1Location = gl.getUniformLocation(program, "u_imageA");
   const image2Location = gl.getUniformLocation(program, "u_imageB");

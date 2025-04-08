@@ -56,6 +56,7 @@ export function createProgram({
   });
 
   if (isError(vertexShaderResult) || isError(fragmentShaderResult)) {
+    console.error(vertexShaderResult, fragmentShaderResult);
     return error("Failed to create shaders");
   }
 

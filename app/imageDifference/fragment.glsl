@@ -1,34 +1,37 @@
+#version 300 es
+
 precision mediump float;
-varying vec2 v_texCoord;
+out vec4 fragColor;
+in vec2 v_texCoord;
 uniform sampler2D u_imageA;
 uniform sampler2D u_imageB;
-uniform vec2 u_imageASize;
-uniform vec2 u_imageBSize;
 
 void main() {
   vec2 uvCoord = vec2(v_texCoord.x, v_texCoord.y);
-  vec2 maxSize = max(u_imageASize, u_imageBSize);
-  vec2 minSize = min(u_imageASize, u_imageBSize);
+  vec2 textureSizeA = vec2(textureSize(u_imageA, 0));
+  vec2 textureSizeB = vec2(textureSize(u_imageB, 0));
+  vec2 maxSize = max(textureSizeA, textureSizeB);
   vec2 pixelCoord = vec2(uvCoord.x * maxSize.x, uvCoord.y * maxSize.y);
 
   // If we're outside either image's bounds, show bright red.
-  if(pixelCoord.x >= minSize.x || pixelCoord.y >= minSize.y) {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  if(pixelCoord.x >= textureSizeA.x || pixelCoord.y >= textureSizeA.y ||
+    pixelCoord.x >= textureSizeB.x || pixelCoord.y >= textureSizeB.y) {
+    fragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); // Bright red for out of bounds
     return;
   }
 
-  // Convert pixel coordinates back to normalized UV coordinates for each 
-  //texture
-  vec2 uvA = pixelCoord / u_imageASize;
-  vec2 uvB = pixelCoord / u_imageBSize;
+  // Convert pixel coordinates back to normalized UV coordinates for each
+  // texture using the correct size for each texture
+  vec2 uvA = pixelCoord / textureSizeA;
+  vec2 uvB = pixelCoord / textureSizeB;
 
-  vec4 color1 = texture2D(u_imageA, uvA);
-  vec4 color2 = texture2D(u_imageB, uvB);
+  vec4 color1 = texture(u_imageA, uvA);
+  vec4 color2 = texture(u_imageB, uvB);
 
   // TODO: make this configurable.
-  // If both pixels are fully transparent, they are considered identical
-  if(color1.a == 0.0 && color2.a == 0.0) {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+  // If both pixels are fully transparent, they are considered identical.
+  if(color1.a == 0.0f && color2.a == 0.0f) {
+    fragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
     return;
   }
 
@@ -37,5 +40,5 @@ void main() {
 
   // For RGB differences, use the difference values
   // For alpha differences, show them in the red channel
-  gl_FragColor = vec4(max(diff.r, diff.a), diff.g, diff.b, 1.0);
+  fragColor = vec4(max(diff.r, diff.a), diff.g, diff.b, 1.0f);
 }
