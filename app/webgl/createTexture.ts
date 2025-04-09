@@ -2,7 +2,7 @@ export function createTexture({
   gl,
   image,
 }: {
-  gl: WebGLRenderingContext;
+  gl: WebGL2RenderingContext;
   image: HTMLImageElement;
 }) {
   const texture = gl.createTexture();
@@ -13,6 +13,7 @@ export function createTexture({
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 

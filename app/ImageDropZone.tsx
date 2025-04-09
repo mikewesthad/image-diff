@@ -42,7 +42,7 @@ export default function ImageDropZone({ onDrop, children }: ImageDropZoneProps) 
 
   return (
     <div
-      className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+      className="h-full border-2 border-gray-200 p-2 rounded-sm text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center justify-center"
       onClick={handleClick}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
@@ -57,7 +57,6 @@ export default function ImageDropZone({ onDrop, children }: ImageDropZoneProps) 
         onChange={handleFileChange}
         className="hidden"
       />
-      <p className="text-gray-500">Click or drag and drop images here</p>
       {children}
     </div>
   );

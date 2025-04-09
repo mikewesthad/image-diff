@@ -1,12 +1,8 @@
 "use client";
 
-import vertexShaderSource from "./vertex.glsl";
-import fragmentShaderSource from "./fragment.glsl";
 import { useEffect, useRef, useState } from "react";
-import { createGlslProgram } from "../webgl/createShader";
 import { isError } from "../result";
-import { createTexture } from "../webgl/createTexture";
-import { drawTwoImageProgram } from "../webgl/createFullscreenQuad";
+import { createImageDifferenceProgram } from "./createImageDifferenceProgram";
 
 export default function ImageDifference({
   imageA,
@@ -34,37 +30,20 @@ export default function ImageDifference({
         return;
       }
 
-      const programResult = createGlslProgram({ gl, vertexShaderSource, fragmentShaderSource });
-      if (isError(programResult)) {
-        setError(programResult.error);
+      const result = createImageDifferenceProgram({ gl, imageA, imageB });
+      if (isError(result)) {
+        setError(result.error);
         return;
       }
 
-      const program = programResult.value;
+      const { render, destroy } = result.value;
 
-      gl.useProgram(program);
-
-      const textureA = createTexture({ gl, image: imageA });
-      const textureB = createTexture({ gl, image: imageB });
-
-      const { positionBuffer, texCoordBuffer, vertexArrayObject } = drawTwoImageProgram({
-        gl,
-        program,
-        textureA,
-        textureB,
-      });
+      render();
 
       // TODO: ideally an object URL.
       setDifferenceImage(canvas.toDataURL());
 
-      return () => {
-        gl.deleteBuffer(positionBuffer);
-        gl.deleteBuffer(texCoordBuffer);
-        gl.deleteVertexArray(vertexArrayObject);
-        gl.deleteTexture(textureA);
-        gl.deleteTexture(textureB);
-        gl.deleteProgram(program);
-      };
+      return destroy;
     }
   }, [imageA, imageB]);
 
@@ -73,7 +52,7 @@ export default function ImageDifference({
       <div className="mt-4">
         <h2 className="text-xl font-semibold mb-2">Difference Image</h2>
         <p className="text-sm text-gray-600 mb-2">
-          Black pixels indicate identical areas, colored pixels show differences
+          Black pixels indicate identical areas, colored pixels show differences.
         </p>
         {!differenceImage && !error ? <p>Please upload two images to see the difference</p> : null}
         {error ? <p className="text-red-500">{error}</p> : null}

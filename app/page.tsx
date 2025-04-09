@@ -20,36 +20,19 @@ export default function Home() {
   const [image1, setImage1] = useState<HTMLImageElement | null>(null);
   const [image2, setImage2] = useState<HTMLImageElement | null>(null);
 
-  const handleImageLoad = useCallback(
-    async (imageFileList: FileList) => {
-      if (imageFileList.length === 0) {
-        return;
-      }
+  const handleImage1Change = useCallback(async (file: File) => {
+    const result = await loadImage(file);
+    if (!isError(result)) {
+      setImage1(result.value);
+    }
+  }, []);
 
-      const firstFile = imageFileList[0];
-      const secondFile = imageFileList[1];
-
-      const [image1Result, image2Result] = await Promise.all([
-        firstFile ? loadImage(firstFile) : null,
-        secondFile ? loadImage(secondFile) : null,
-      ]);
-
-      const newImage1 = image1Result && !isError(image1Result) ? image1Result.value : null;
-      const newImage2 = image2Result && !isError(image2Result) ? image2Result.value : null;
-
-      const allImages = [image1, image2, newImage1, newImage2].filter((image) => image !== null);
-      const updatedImages = allImages.slice(allImages.length - 2);
-
-      if (updatedImages[0]) {
-        setImage1(updatedImages[0]);
-      }
-
-      if (updatedImages[1]) {
-        setImage2(updatedImages[1]);
-      }
-    },
-    [image1, image2]
-  );
+  const handleImage2Change = useCallback(async (file: File) => {
+    const result = await loadImage(file);
+    if (!isError(result)) {
+      setImage2(result.value);
+    }
+  }, []);
 
   const handleReset = useCallback(() => {
     setImage1(null);
@@ -73,19 +56,27 @@ export default function Home() {
             onClick={handleReset}
             className="cursor-pointer px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >
-            Reset Images
+            Reset
           </button>
         </div>
         <div className="space-y-8">
-          <ImageDropZone onDrop={handleImageLoad}>
-            {image1 && !image2 ? (
-              <p className="text-sm text-gray-400 mt-2">Drop a second image to compare</p>
-            ) : null}
-          </ImageDropZone>
-
           <div className="grid grid-cols-2 gap-8">
-            <ImagePreview image={image1} label="First Image" onRemove={handleRemoveImage1} />
-            <ImagePreview image={image2} label="Second Image" onRemove={handleRemoveImage2} />
+            <div className="h-[300px]">
+              <ImagePreview
+                image={image1}
+                label="First Image"
+                onRemove={handleRemoveImage1}
+                onImageChange={handleImage1Change}
+              />
+            </div>
+            <div className="h-[300px]">
+              <ImagePreview
+                image={image2}
+                label="Second Image"
+                onRemove={handleRemoveImage2}
+                onImageChange={handleImage2Change}
+              />
+            </div>
           </div>
 
           <ImageDifference imageA={image1} imageB={image2} />
