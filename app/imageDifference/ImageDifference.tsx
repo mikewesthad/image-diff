@@ -3,7 +3,7 @@
 import vertexShaderSource from "./vertex.glsl";
 import fragmentShaderSource from "./fragment.glsl";
 import { useEffect, useRef, useState } from "react";
-import { createProgram } from "../webgl/createShader";
+import { createGlslProgram } from "../webgl/createShader";
 import { isError } from "../result";
 import { createTexture } from "../webgl/createTexture";
 import { drawTwoImageProgram } from "../webgl/createFullscreenQuad";
@@ -34,7 +34,7 @@ export default function ImageDifference({
         return;
       }
 
-      const programResult = createProgram({ gl, vertexShaderSource, fragmentShaderSource });
+      const programResult = createGlslProgram({ gl, vertexShaderSource, fragmentShaderSource });
       if (isError(programResult)) {
         setError(programResult.error);
         return;
@@ -47,7 +47,7 @@ export default function ImageDifference({
       const textureA = createTexture({ gl, image: imageA });
       const textureB = createTexture({ gl, image: imageB });
 
-      const { positionBuffer, texCoordBuffer } = drawTwoImageProgram({
+      const { positionBuffer, texCoordBuffer, vertexArrayObject } = drawTwoImageProgram({
         gl,
         program,
         textureA,
@@ -60,6 +60,7 @@ export default function ImageDifference({
       return () => {
         gl.deleteBuffer(positionBuffer);
         gl.deleteBuffer(texCoordBuffer);
+        gl.deleteVertexArray(vertexArrayObject);
         gl.deleteTexture(textureA);
         gl.deleteTexture(textureB);
         gl.deleteProgram(program);

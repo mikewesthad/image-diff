@@ -35,7 +35,7 @@ export function createShader({
 /**
  * Creates a program from a vertex shader and a fragment shader.
  */
-export function createProgram({
+export function createGlslProgram({
   gl,
   vertexShaderSource,
   fragmentShaderSource,

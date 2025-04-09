@@ -1,10 +1,13 @@
 #version 300 es
 
-precision mediump float;
-out vec4 fragColor;
+precision highp float;
+
 in vec2 v_texCoord;
+
 uniform sampler2D u_imageA;
 uniform sampler2D u_imageB;
+
+out vec4 fragColor;
 
 void main() {
   vec2 uvCoord = vec2(v_texCoord.x, v_texCoord.y);
