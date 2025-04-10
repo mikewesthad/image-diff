@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 import { VisuallyHidden } from "react-aria";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="flex justify-between items-center pt-4 pb-4">
-      <Link href="/">
-        <h1 className="text-md font-bold">ImageDiff</h1>
+      <Link href="/" className="flex items-center gap-1">
+        <Image src="/logo.svg" alt="ImgDiff logo" width={35} height={35} />
+        <h1 className="text-md font-bold">ImgDiff</h1>
         <VisuallyHidden>Go to homepage</VisuallyHidden>
       </Link>
       <a

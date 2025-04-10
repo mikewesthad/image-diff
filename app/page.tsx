@@ -22,9 +22,9 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         <Header />
 
-        <h1 className="text-2xl font-bold text-center text-gray-600 pb-2">Image Diff Tool</h1>
+        <h1 className="text-2xl font-bold text-center pb-2">Image Diff Tool</h1>
 
-        <h1 className="text-xl text-center text-gray-600 pb-8">
+        <h1 className="text-xl text-center pb-8">
           Upload two images to compare them side by side and see the differences
         </h1>
 
