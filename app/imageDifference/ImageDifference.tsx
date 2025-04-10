@@ -50,7 +50,7 @@ export default function ImageDifference({
   return (
     <div>
       <div className="mt-4">
-        <h2 className="text-xl font-semibold mb-2">Difference Image</h2>
+        <h2 className="text-xl font-semibold mb-2">Difference</h2>
         <p className="text-sm text-gray-600 mb-2">
           Black pixels indicate identical areas, colored pixels show differences.
         </p>

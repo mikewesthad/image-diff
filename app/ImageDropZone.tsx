@@ -5,9 +5,10 @@ import { useCallback, useRef } from "react";
 interface ImageDropZoneProps {
   onDrop: (files: FileList) => void;
   children?: React.ReactNode;
+  className?: string;
 }
 
-export default function ImageDropZone({ onDrop, children }: ImageDropZoneProps) {
+export default function ImageDropZone({ onDrop, children, className = "" }: ImageDropZoneProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = useCallback(() => {
@@ -42,7 +43,7 @@ export default function ImageDropZone({ onDrop, children }: ImageDropZoneProps) 
 
   return (
     <div
-      className="h-full border-2 border-gray-200 p-2 rounded-sm text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center justify-center"
+      className={`h-full border-2 border-gray-200 p-2 rounded-sm text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center justify-center ${className}`}
       onClick={handleClick}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
