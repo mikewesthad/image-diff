@@ -54,11 +54,15 @@ export default function Home() {
             <button
               onClick={async () => {
                 const [response1, response2] = await Promise.all([
-                  fetch("/example1.png").then((res) => res.blob()),
-                  fetch("/example2.png").then((res) => res.blob()),
+                  fetch("/mario-tileset-light.png").then((res) => res.blob()),
+                  fetch("/mario-tileset-dark.png").then((res) => res.blob()),
                 ]);
-                const file1 = new File([response1], "example1.png", { type: "image/png" });
-                const file2 = new File([response2], "example2.png", { type: "image/png" });
+                const file1 = new File([response1], "mario-tileset-light.png", {
+                  type: "image/png",
+                });
+                const file2 = new File([response2], "mario-tileset-dark.png", {
+                  type: "image/png",
+                });
                 await Promise.all([setImage1(file1), setImage2(file2)]);
                 router.push("/diff");
               }}
