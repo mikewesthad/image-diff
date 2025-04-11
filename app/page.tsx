@@ -29,7 +29,7 @@ export default function Home() {
         </h1>
 
         <div className="max-w-[500px] w-full mx-auto">
-          <ImageDropZone onDrop={handleImageDrop} className="w-full">
+          <ImageDropZone onDrop={handleImageDrop} className="w-full p-8">
             <div className="flex flex-col items-center justify-center h-full text-gray-500">
               <svg
                 className="mx-auto h-12 w-12"
@@ -50,6 +50,23 @@ export default function Home() {
               </div>
             </div>
           </ImageDropZone>
+          <div className="flex justify-center">
+            <button
+              onClick={async () => {
+                const [response1, response2] = await Promise.all([
+                  fetch("/example1.png").then((res) => res.blob()),
+                  fetch("/example2.png").then((res) => res.blob()),
+                ]);
+                const file1 = new File([response1], "example1.png", { type: "image/png" });
+                const file2 = new File([response2], "example2.png", { type: "image/png" });
+                await Promise.all([setImage1(file1), setImage2(file2)]);
+                router.push("/diff");
+              }}
+              className="mt-6 text-blue-500 hover:text-blue-700 text-sm hover:underline cursor-pointer opacity-80"
+            >
+              Or, load example images
+            </button>
+          </div>
         </div>
       </div>
     </main>
