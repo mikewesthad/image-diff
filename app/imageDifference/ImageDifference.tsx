@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { isError } from "../result";
 import { createImageDifferenceProgram } from "./createImageDifferenceProgram";
-
+import { ImageStateData } from "../ImageProvider/ImageProvider";
 export default function ImageDifference({
   imageA,
   imageB,
 }: {
-  imageA?: HTMLImageElement | null;
-  imageB?: HTMLImageElement | null;
+  imageA?: ImageStateData | null;
+  imageB?: ImageStateData | null;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [differenceImage, setDifferenceImage] = useState<string | null>(null);
@@ -30,7 +30,11 @@ export default function ImageDifference({
         return;
       }
 
-      const result = createImageDifferenceProgram({ gl, imageA, imageB });
+      const result = createImageDifferenceProgram({
+        gl,
+        imageA: imageA.imageElement,
+        imageB: imageB.imageElement,
+      });
       if (isError(result)) {
         setError(result.error);
         return;
@@ -57,11 +61,13 @@ export default function ImageDifference({
         {!differenceImage && !error ? <p>Please upload two images to see the difference</p> : null}
         {error ? <p className="text-red-500">{error}</p> : null}
         {differenceImage ? (
-          <img
-            src={differenceImage ?? undefined}
-            alt="Difference between images"
-            className="max-w-full h-auto border border-gray-200 rounded"
-          />
+          <div className="w-full border-2 border-gray-200 p-2 rounded-sm">
+            <img
+              src={differenceImage ?? undefined}
+              alt="Difference between images"
+              className="w-full max-w-[500px] h-auto border border-gray-200 rounded mx-auto"
+            />
+          </div>
         ) : null}
       </div>
 

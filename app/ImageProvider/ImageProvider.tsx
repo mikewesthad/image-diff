@@ -14,13 +14,20 @@ interface ImageContextType {
 
 export const ImageContext = createContext<ImageContextType | null>(null);
 
+export type ImageStateData = {
+  imageObjectUrl: string;
+  imageElement: HTMLImageElement;
+  width: number;
+  height: number;
+  fileName: string;
+  fileLastModified: number;
+  fileType: string;
+};
+
 type ImageState =
-  | {
+  | ({
       state: "success";
-      imageElement: HTMLImageElement;
-      width: number;
-      height: number;
-    }
+    } & ImageStateData)
   | {
       state: "error";
       error: string;
@@ -43,9 +50,13 @@ export function ImageProvider({ children }: { children: ReactNode }) {
     if (!isError(result)) {
       setState({
         state: "success",
-        imageElement: result.value,
-        width: result.value.naturalWidth,
-        height: result.value.naturalHeight,
+        imageObjectUrl: result.value.objectUrl,
+        imageElement: result.value.img,
+        width: result.value.img.naturalWidth,
+        height: result.value.img.naturalHeight,
+        fileName: file.name ?? "untitled.png",
+        fileLastModified: file.lastModified || Date.now(),
+        fileType: file.type ?? "unknown",
       });
     } else {
       setState({ state: "error", error: result.error });

@@ -8,7 +8,7 @@ export default function Home() {
   const { setImage1, setImage2 } = useImageProvider();
   const router = useRouter();
 
-  const handleImageDrop = async (files: FileList) => {
+  const handleImageDrop = async (files: File[]) => {
     const file1 = files[0];
     const file2 = files[1];
 
@@ -28,7 +28,7 @@ export default function Home() {
           Upload two images to compare them side by side and see the differences
         </h1>
 
-        <div className="max-w-[500px] w-full mx-auto h-[250px]">
+        <div className="max-w-[500px] w-full mx-auto">
           <ImageDropZone onDrop={handleImageDrop} className="w-full">
             <div className="flex flex-col items-center justify-center h-full text-gray-500">
               <svg

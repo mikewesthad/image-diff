@@ -1,28 +1,34 @@
 "use client";
 
 import ImageDropZone from "./ImageDropZone";
+import { ImageStateData } from "./ImageProvider/ImageProvider";
 
 interface ImagePreviewProps {
-  image: HTMLImageElement | null;
+  imageData: ImageStateData | null;
   label: string;
   onRemove: () => void;
   onImageChange: (file: File) => void;
 }
 
-export default function ImagePreview({ image, label, onRemove, onImageChange }: ImagePreviewProps) {
-  const handleDrop = (files: FileList) => {
+export default function ImagePreview({
+  imageData,
+  label,
+  onRemove,
+  onImageChange,
+}: ImagePreviewProps) {
+  const handleDrop = (files: File[]) => {
     if (files.length > 0 && onImageChange) {
       onImageChange(files[0]);
     }
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="h-full">
       <div className="pb-2 mt-2 text-gray-500 flex justify-between items-center">
         <p className="text-md font-medium">{label}</p>
         <button
           onClick={onRemove}
-          disabled={!image}
+          disabled={!imageData}
           className="p-1.5 text-gray-400 enabled:hover:text-red-500 enabled:hover:bg-red-50 enabled:active:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-full transition-colors duration-150 cursor-pointer disabled:opacity-80 disabled:cursor-not-allowed"
           aria-label="Remove image"
         >
@@ -36,10 +42,14 @@ export default function ImagePreview({ image, label, onRemove, onImageChange }: 
           </svg>
         </button>
       </div>
-      <div className="flex-auto h-[150px]">
+      <div className="h-[200px]">
         <ImageDropZone onDrop={handleDrop}>
-          {image ? (
-            <img src={image.src} alt={label} className="max-w-full max-h-full object-contain" />
+          {imageData ? (
+            <img
+              src={imageData.imageObjectUrl}
+              alt={label}
+              className="max-w-full max-h-full object-contain"
+            />
           ) : (
             <div className="text-gray-400 text-center p-4">
               <svg
@@ -61,10 +71,19 @@ export default function ImagePreview({ image, label, onRemove, onImageChange }: 
         </ImageDropZone>
       </div>
       <div className="mt-2 text-sm text-gray-500">
-        {image && (
-          <p>
-            {image.width} x {image.height} pixels
-          </p>
+        {imageData && (
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between">
+              <span className="font-medium">Size</span>
+              <span>
+                {imageData.width} x {imageData.height} pixels
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Filename</span>
+              <span>{imageData.fileName}</span>
+            </div>
+          </div>
         )}
       </div>
     </div>

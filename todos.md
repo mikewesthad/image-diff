@@ -3,11 +3,11 @@
 Mvp:
 - [x] Show difference
 - [ ] Styling updates
-  - [ ] Logo header
+  - [x] Logo header
   - [ ] Responsive pass
-  - [ ] Image previews consistent height
-  - [ ] Difference image styling
-  - [ ] Filename / file type info
+  - [x] Image previews consistent height
+  - [x] Difference image styling
+  - [x] Filename / file type info
 - [ ] Ignore transparent pixel diff
 - [ ] Hover/click to display rbga values
 

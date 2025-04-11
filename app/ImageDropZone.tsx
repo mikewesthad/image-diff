@@ -3,10 +3,14 @@
 import { useCallback, useRef } from "react";
 
 interface ImageDropZoneProps {
-  onDrop: (files: FileList) => void;
+  onDrop: (files: File[]) => void;
   children?: React.ReactNode;
   className?: string;
 }
+
+const filterToImageFiles = (files: FileList): File[] => {
+  return Array.from(files).filter((f) => f.type.startsWith("image/"));
+};
 
 export default function ImageDropZone({ onDrop, children, className = "" }: ImageDropZoneProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -17,8 +21,9 @@ export default function ImageDropZone({ onDrop, children, className = "" }: Imag
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        onDrop(e.target.files);
+      const files = e.target.files ? filterToImageFiles(e.target.files) : [];
+      if (files.length > 0) {
+        onDrop(files);
       }
     },
     [onDrop]
@@ -34,8 +39,9 @@ export default function ImageDropZone({ onDrop, children, className = "" }: Imag
       e.preventDefault();
       e.stopPropagation();
 
-      if (e.dataTransfer.files) {
-        onDrop(e.dataTransfer.files);
+      const files = e.dataTransfer.files ? filterToImageFiles(e.dataTransfer.files) : [];
+      if (files.length > 0) {
+        onDrop(files);
       }
     },
     [onDrop]
