@@ -13,10 +13,16 @@ export function createImageDifferenceProgram({
   gl,
   imageA,
   imageB,
+  ignoreTransparent,
 }: {
   gl: WebGL2RenderingContext;
   imageA: HTMLImageElement;
   imageB: HTMLImageElement;
+  /**
+   * If true, this will consider any fully transparent pixels to be identical
+   * even if they have different individual red, green and blue values
+   */
+  ignoreTransparent: boolean;
 }): Result<ShaderProgram> {
   const programResult = createGlslProgram({ gl, vertexShaderSource, fragmentShaderSource });
   if (isError(programResult)) {
@@ -33,6 +39,7 @@ export function createImageDifferenceProgram({
   const texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
   const image1Location = gl.getUniformLocation(program, "u_imageA");
   const image2Location = gl.getUniformLocation(program, "u_imageB");
+  const ignoreTransparentLocation = gl.getUniformLocation(program, "u_ignoreTransparent");
 
   // Vertex positions for a quad covering the render area. (-1, -1) is the is
   // the bottom left in clip space.
@@ -109,6 +116,9 @@ export function createImageDifferenceProgram({
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, textureB);
       gl.uniform1i(image2Location, 1);
+
+      // Set the ignoreTransparent uniform
+      gl.uniform1i(ignoreTransparentLocation, ignoreTransparent ? 1 : 0);
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     },

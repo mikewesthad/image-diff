@@ -8,7 +8,7 @@ Mvp:
   - [x] Image previews consistent height
   - [x] Difference image styling
   - [x] Filename / file type info
-- [ ] Ignore transparent pixel diff
+- [x] Ignore transparent pixel diff
 - [ ] Hover/click to display rbga values
 
 Extra:

@@ -6,6 +6,7 @@ in vec2 v_texCoord;
 
 uniform sampler2D u_imageA;
 uniform sampler2D u_imageB;
+uniform bool u_ignoreTransparent;
 
 out vec4 fragColor;
 
@@ -27,9 +28,9 @@ void main() {
   vec4 color1 = texelFetch(u_imageA, pixelCoord, 0);
   vec4 color2 = texelFetch(u_imageB, pixelCoord, 0);
 
-  // TODO: make this configurable.
-  // If both pixels are fully transparent, they are considered identical.
-  if(color1.a == 0.0f && color2.a == 0.0f) {
+  // If ignoreTransparent is enabled and both pixels are fully transparent, they 
+  // are considered identical.
+  if(u_ignoreTransparent && color1.a == 0.0f && color2.a == 0.0f) {
     fragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
     return;
   }
