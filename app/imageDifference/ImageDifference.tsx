@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { isError } from "../result";
+import { isError } from "ts-outcome";
 import { createImageDifferenceProgram } from "./createImageDifferenceProgram";
 import { ImageStateData } from "../ImageProvider/ImageProvider";
 import { Tooltip, TooltipTrigger, OverlayArrow, Button } from "react-aria-components";
@@ -145,7 +145,7 @@ export default function ImageDifference({
         ignoreTransparent,
       });
       if (isError(result)) {
-        setError(result.error);
+        setError(result.error.message);
         return;
       }
 

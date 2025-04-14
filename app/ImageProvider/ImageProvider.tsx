@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useState, useCallback, ReactNode } from "react";
-import { isError } from "@/app/result";
+import { isError } from "ts-outcome";
 import { loadImage } from "./loadImage";
 
 interface ImageContextType {
@@ -59,7 +59,7 @@ export function ImageProvider({ children }: { children: ReactNode }) {
         fileType: file.type ?? "unknown",
       });
     } else {
-      setState({ state: "error", error: result.error });
+      setState({ state: "error", error: result.error.message });
     }
   };
 

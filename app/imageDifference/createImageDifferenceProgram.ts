@@ -1,7 +1,7 @@
 import { createGlslProgram } from "../webgl/createShader";
 import vertexShaderSource from "./vertex.glsl";
 import fragmentShaderSource from "./fragment.glsl";
-import { error, isError, success, Result } from "../result";
+import { makeSuccess, makeError, isError, Outcome } from "ts-outcome";
 import { createTexture } from "../webgl/createTexture";
 
 interface ShaderProgram {
@@ -23,10 +23,10 @@ export function createImageDifferenceProgram({
    * even if they have different individual red, green and blue values
    */
   ignoreTransparent: boolean;
-}): Result<ShaderProgram> {
+}): Outcome<ShaderProgram, Error> {
   const programResult = createGlslProgram({ gl, vertexShaderSource, fragmentShaderSource });
   if (isError(programResult)) {
-    return error(programResult.error);
+    return makeError(programResult.error);
   }
 
   let isDestroyed = false;
@@ -97,7 +97,7 @@ export function createImageDifferenceProgram({
   gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
   gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-  return success({
+  return makeSuccess({
     render: () => {
       if (isDestroyed) {
         return;

@@ -1,4 +1,4 @@
-import { error, isError, Result, success } from "../result";
+import { makeSuccess, makeError, isError, Outcome } from "ts-outcome";
 
 /**
  * Creates a shader from a source string
@@ -11,10 +11,10 @@ export function createShader({
   gl: WebGLRenderingContext;
   type: number;
   source: string;
-}): Result<WebGLShader> {
+}): Outcome<WebGLShader, Error> {
   const shader = gl.createShader(type);
   if (!shader) {
-    return error("Failed to create shader");
+    return makeError(new Error("Failed to create shader"));
   }
 
   gl.shaderSource(shader, source);
@@ -22,14 +22,14 @@ export function createShader({
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const result = error<WebGLShader>(
-      gl.getShaderInfoLog(shader) ?? "Unknown shader compilation error"
+    const result = makeError<WebGLShader, Error>(
+      new Error(gl.getShaderInfoLog(shader) ?? "Unknown shader compilation error")
     );
     gl.deleteShader(shader);
     return result;
   }
 
-  return success(shader);
+  return makeSuccess(shader);
 }
 
 /**
@@ -43,7 +43,7 @@ export function createGlslProgram({
   gl: WebGLRenderingContext;
   vertexShaderSource: string;
   fragmentShaderSource: string;
-}): Result<WebGLProgram> {
+}): Outcome<WebGLProgram, Error> {
   const vertexShaderResult = createShader({
     gl,
     type: gl.VERTEX_SHADER,
@@ -57,12 +57,12 @@ export function createGlslProgram({
 
   if (isError(vertexShaderResult) || isError(fragmentShaderResult)) {
     console.error(vertexShaderResult, fragmentShaderResult);
-    return error("Failed to create shaders");
+    return makeError(new Error("Failed to create shaders"));
   }
 
   const program = gl.createProgram();
   if (!program) {
-    return error("Failed to create program");
+    return makeError(new Error("Failed to create program"));
   }
 
   gl.attachShader(program, vertexShaderResult.value);
@@ -71,8 +71,8 @@ export function createGlslProgram({
 
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     const info = gl.getProgramInfoLog(program);
-    return error(`Could not compile WebGL program. \n\n${info}`);
+    return makeError(new Error(`Could not compile WebGL program. \n\n${info}`));
   }
 
-  return success(program);
+  return makeSuccess(program);
 }
